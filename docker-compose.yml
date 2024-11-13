@@ -18,7 +18,7 @@ services:
   guest-web:
     build:
       context: ./guest-web
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     environment:
       VITE_API_BASE_URL: "http://localhost/api"
     networks:
@@ -28,7 +28,7 @@ services:
   broadcast-sender:
     build:
       context: ./broadcast-sender
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     environment:
       API_BASE_URL: "http://localhost/api"
     networks:
@@ -38,7 +38,11 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
+      args:
+        DATABASE_URL: "postgresql://sazanami:sazanami@postgres:5432/sazanami"
+    environment:
+      DATABASE_URL: "postgresql://sazanami:sazanami@postgres:5432/sazanami"
     ports:
       - "3000:3000"
     depends_on:
@@ -50,6 +54,7 @@ services:
 
   # バックエンド系 - PostgreSQL
   postgres:
+    container_name: postgres
     image: postgres:15
     environment:
       POSTGRES_USER: sazanami
@@ -67,6 +72,8 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
+    networks:
+      - backend
 
 networks:
   frontend:
