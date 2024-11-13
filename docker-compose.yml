@@ -20,8 +20,7 @@ services:
       context: ./guest-web
       dockerfile: Dockerfile
     environment:
-      TODO: todo
-      # TODO
+      VITE_API_BASE_URL: "http://localhost/api"
     networks:
       - frontend
 
@@ -31,8 +30,7 @@ services:
       context: ./broadcast-sender
       dockerfile: Dockerfile
     environment:
-      TODO: todo
-      # TODO
+      API_BASE_URL: "http://localhost/api"
     networks:
       - frontend
 
