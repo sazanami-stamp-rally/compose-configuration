@@ -66,6 +66,11 @@ services:
       - ./data/api/postgres:/var/lib/postgresql/data
     networks:
       - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # バックエンド系 - Redis
   redis:
