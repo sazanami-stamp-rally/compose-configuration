@@ -1,6 +1,6 @@
 services:
 
-  # リバースプロキシ
+  # バックエンド/フロントエンドリバースプロキシ - Nginx
   nginx:
     image: nginx:latest
     ports:
@@ -12,7 +12,28 @@ services:
       - guest-web
       - broadcast-sender
     networks:
-      - backend
+      - frontend
+
+  # フロントエンド系 - 参加者用Web
+  guest-web:
+    build:
+      context: ./guest-web
+      dockerfile: Dockerfile
+    environment:
+      TODO: todo
+      # TODO
+    networks:
+      - frontend
+
+  # フロントエンド系 - 模擬店アナウンス用
+  broadcast-sender:
+    build:
+      context: ./broadcast-sender
+      dockerfile: Dockerfile
+    environment:
+      TODO: todo
+      # TODO
+    networks:
       - frontend
 
   # バックエンド系 - APIサーバー
@@ -26,5 +47,25 @@ services:
       - postgres
       - redis
     networks:
+      - frontend
       - backend
 
+  # バックエンド系 - PostgreSQL
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: sazanami
+      POSTGRES_PASSWORD: sazanami
+      POSTGRES_DB: sazanami
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/api/postgres:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  # バックエンド系 - Redis
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
