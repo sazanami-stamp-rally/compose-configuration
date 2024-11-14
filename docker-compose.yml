@@ -19,8 +19,10 @@ services:
     build:
       context: ./guest-web
       dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: "http://rca-ukuru/api"
     environment:
-      VITE_API_BASE_URL: "http://localhost/api"
+      VITE_API_BASE_URL: "http://rca-ukuru/api"
     networks:
       - frontend
 
@@ -29,8 +31,10 @@ services:
     build:
       context: ./broadcast-sender
       dockerfile: Dockerfile
+      args:
+        API_BASE_URL: "http://rca-ukuru/api"
     environment:
-      API_BASE_URL: "http://localhost/api"
+      API_BASE_URL: "http://rca-ukuru/api"
     networks:
       - frontend
 
@@ -43,9 +47,11 @@ services:
         DATABASE_URL: "postgresql://sazanami:sazanami@postgres:5432/sazanami"
     environment:
       DATABASE_URL: "postgresql://sazanami:sazanami@postgres:5432/sazanami"
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
     ports:
       - "3000:3000"
-    entrypoint: "npm run init && npm run start"
+    entrypoint: "npm run seedAndStart"
     depends_on:
       postgres:
         condition: service_healthy
@@ -70,7 +76,7 @@ services:
     networks:
       - backend
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 5
