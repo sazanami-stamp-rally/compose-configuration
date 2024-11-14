@@ -38,6 +38,18 @@ services:
     networks:
       - frontend
 
+  # フロントエンド系 - デジタルサイネージシステム
+  signage:
+    build:
+      context: ./signage
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: "http://rca-ukuru/api"
+    environment:
+      VITE_API_BASE_URL: "http://rca-ukuru/api"
+    networks:
+      - frontend
+
   # バックエンド系 - APIサーバー
   api:
     build:
