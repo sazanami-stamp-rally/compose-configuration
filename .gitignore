@@ -4,4 +4,3 @@
 !docker-compose.yml
 !nginx.conf
 !.env
-!auth.conf
